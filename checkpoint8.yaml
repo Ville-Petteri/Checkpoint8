@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: villepetterihtml
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: villepetterihtml
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5 
+  template:
+    metadata:
+      labels:
+        app: villepetterihtml
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+      - name: villepetterihtml
+        image: villepetteriacr.azurecr.io/villepetterihtml:v1
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 250m
+          limits:
+            cpu: 500m
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: villepetterihtml-lb
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: villepetterihtml
+---
+# http://20.73.226.146/

@@ -1,0 +1,9 @@
+docker-compose up --detach     
+docker build -t villepetterihtml .     
+docker tag villepetterihtml   villepetteriacr.azurecr.io/villepetterihtml:v1
+docker push villepetteriacr.azurecr.io/villepetterihtml:v1
+az acr login --name villepetteriacr
+
+az aks get-credentials --resource-group Ville-PetteriResourceGroup --name villepetteriaks 
+az aks update -n villepetteriaks  -g Ville-PetteriResourceGroup --attach-acr villepetteriacr
+kubectl apply -f checkpoint8.yaml
